@@ -47,11 +47,12 @@ class Client:
         #raise  # UnknownFileError
             raise Exception('No usable location to get file.')
 
-    def store_file(self, file_handle, key, _class=None, timeout=None):
+    def store_file(self, file_handle, key, _class=None, timeout=None, zone='alt'):
         kwargs = {'domain': self._domain,
                   'key': key,
                   'fid': 0,
-                  'multi_dest': 1}
+                  'multi_dest': 1,
+                  'zone' : zone}
         if _class is not None:
             kwargs['class'] = _class
         paths = self._create_open(**kwargs).data
@@ -76,6 +77,7 @@ class Client:
                     'path': path,
                     'devid': devid,
                     'size': length,
+                    'zone': zone
                 }
                 if _class is not None:
                     kwargs['class'] = _class
