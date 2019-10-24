@@ -15,9 +15,9 @@ from pymogilefs.exceptions import FileNotFoundError, MogilefsError
 from pymogilefs.response import Response
 
 try:
-    from unittest.mock import patch
+    from unittest.mock import patch, MagicMock
 except ImportError:
-    from mock import patch
+    from mock import patch, MagicMock
 
 
 class FileTestCase(TestCase):
@@ -27,7 +27,7 @@ class FileTestCase(TestCase):
         # through seek().
         def fake_put(path, data, timeout=None):
             data.read()
-
+            return MagicMock()
         create_open = Response('OK paths=1&path_1=http://10.0.0.1:7500/dev1/0'
                                '/1/2/0000000001.fid&fid=56320928&dev_count=1&'
                                'devid_1=57\r\n',
@@ -111,7 +111,7 @@ class FileTestCase(TestCase):
                                 '4/0056254995.fid&paths=2&path2=http://10.0.0'
                                 '.1:7500/dev54/0/056/254/0056254995.fid\r\n',
                                 GetPathsConfig)
-        with patch.object(requests, 'get', return_value=FakeResponse):
+        with patch.object(requests, 'get', return_value=MagicMock(raw=io.BytesIO(b'foo\r\n'))):
             with patch.object(Client, 'get_paths', return_value=return_value):
                 client = Client([], 'domain')
                 key = 'test_file_0.634434876753_1480606271.32_4'
