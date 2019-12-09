@@ -10,7 +10,7 @@ To install pymogilefs, simply:
 
     $ git clone git@github.com:hrchu/pymogilefs.git
     $ cd pymogilefs
-    $ pi
+    $ pip install .
 
 Usage:
 
