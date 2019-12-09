@@ -8,7 +8,9 @@ abandoned. This implementation adds some production necessary features (tracker 
 
 To install pymogilefs, simply:
 
-    $ pip install pymogilefs
+    $ git clone git@github.com:hrchu/pymogilefs.git
+    $ cd pymogilefs
+    $ pi
 
 Usage:
 
