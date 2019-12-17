@@ -1,15 +1,17 @@
 import logging
 from typing import Dict
 
-from pymogilefs import backend
-from pymogilefs.exceptions import FileNotFoundError, MogilefsError
-from pymogilefs.response import Response
 import requests
 from requests import RequestException
+
+from pymogilefs import backend
+from pymogilefs.exceptions import FileNotFoundError
+from pymogilefs.response import Response
 
 CHUNK_SIZE = 4096
 
 log = logging.getLogger(__name__)
+
 
 class Client:
     def __init__(self, trackers, domain):
@@ -47,8 +49,8 @@ class Client:
             except RequestException as e:
                 log.warning('Get file from the url in idx "%s" failed. Try another one.', idx, exc_info=e)
                 r.close()
-        # TODO: raise proper exception
-        #raise  # UnknownFileError
+            # TODO: raise proper exception
+            # raise  # UnknownFileError
             raise Exception('No usable location to get file.')
 
     def store_file(self, file_handle, key, _class=None, timeout=None, zone='alt') -> Dict:
@@ -66,7 +68,7 @@ class Client:
                   'key': key,
                   'fid': 0,
                   'multi_dest': 1,
-                  'zone' : zone}
+                  'zone': zone}
         if _class is not None:
             kwargs['class'] = _class
         paths = self._create_open(**kwargs).data
@@ -98,7 +100,7 @@ class Client:
                 self._create_close(**kwargs)
                 return {'path': path, 'length': length}
         # TODO: raise proper exception
-        #raise  # UnknownFileError
+        # raise  # UnknownFileError
         raise Exception('No usable location to put file.')
 
     def delete_file(self, key):

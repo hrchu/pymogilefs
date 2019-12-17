@@ -1,6 +1,7 @@
+import unittest
+
 from pymogilefs.backend import GetHostsConfig
 from pymogilefs.request import Request
-import unittest
 
 
 class RequestTest(unittest.TestCase):

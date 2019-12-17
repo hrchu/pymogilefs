@@ -1,3 +1,8 @@
+import io
+from unittest import TestCase
+
+import requests
+
 from pymogilefs.backend import (
     Backend,
     ListKeysConfig,
@@ -8,9 +13,7 @@ from pymogilefs.backend import (
 from pymogilefs.client import Client
 from pymogilefs.exceptions import FileNotFoundError, MogilefsError
 from pymogilefs.response import Response
-from unittest import TestCase
-import io
-import requests
+
 try:
     from unittest.mock import patch
 except ImportError:
@@ -24,14 +27,15 @@ class FileTestCase(TestCase):
         # through seek().
         def fake_put(path, data, timeout=None):
             data.read()
+
         create_open = Response('OK paths=1&path_1=http://10.0.0.1:7500/dev1/0'
                                '/1/2/0000000001.fid&fid=56320928&dev_count=1&'
                                'devid_1=57\r\n',
                                CreateOpenConfig)
         create_close = Response('OK \r\n', CreateCloseConfig)
         with patch.object(Client, '_create_open', return_value=create_open), \
-            patch.object(Client, '_create_close', return_value=create_close), \
-                patch('requests.put', new=fake_put):
+             patch.object(Client, '_create_close', return_value=create_close), \
+             patch('requests.put', new=fake_put):
             client = Client([], 'domain')
             file_handle = io.BytesIO(b'asdf')
             response = client.store_file(file_handle=file_handle,
@@ -75,7 +79,7 @@ class FileTestCase(TestCase):
 
     def test_list_keys_no_results(self):
         side_effect = MogilefsError(code='none_match', message='No keys match'
-                                    ' that pattern and after-value (if any).')
+                                                               ' that pattern and after-value (if any).')
         with patch('pymogilefs.client.Client._do_request') as do_request:
             do_request.side_effect = side_effect
             client = Client([], 'domain')
@@ -102,6 +106,7 @@ class FileTestCase(TestCase):
     def test_get_file(self):
         class FakeResponse:
             raw = io.BytesIO(b'foo\r\n')
+
         return_value = Response('OK path1=http://10.0.0.2:7500/dev38/0/056/25'
                                 '4/0056254995.fid&paths=2&path2=http://10.0.0'
                                 '.1:7500/dev54/0/056/254/0056254995.fid\r\n',

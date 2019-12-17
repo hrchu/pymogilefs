@@ -1,7 +1,8 @@
+import unittest
+
 from pymogilefs.backend import GetHostsConfig
 from pymogilefs.exceptions import MogilefsError
 from pymogilefs.response import Response
-import unittest
 
 
 class ResponseTest(unittest.TestCase):

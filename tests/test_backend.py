@@ -15,6 +15,7 @@ from pymogilefs.backend import (
     SetWeightConfig,
 )
 from pymogilefs.response import Response
+
 try:
     from unittest.mock import patch
 except ImportError:

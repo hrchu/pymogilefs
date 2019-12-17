@@ -1,12 +1,12 @@
 import logging
 import random
+import re
 import socket
 import time
 
+from pymogilefs.connection import Connection
 from pymogilefs.exceptions import MogilefsError
 from pymogilefs.request import Request
-from pymogilefs.connection import Connection
-import re
 
 """
 Backend manages a pool of trackers and balances load between them.
@@ -19,6 +19,7 @@ MAX_RETRIES = 5
 FORGIVENESS_TIME = 5 * 60
 
 log = logging.getLogger(__name__)
+
 
 class Backend:
     def __init__(self, trackers):

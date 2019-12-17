@@ -1,8 +1,8 @@
-from pymogilefs.exceptions import MogilefsError
-from pymogilefs.response import Response
-from pymogilefs.request import Request
 import socket
 
+from pymogilefs.exceptions import MogilefsError
+from pymogilefs.request import Request
+from pymogilefs.response import Response
 
 BUFSIZE = 4096
 TIMEOUT = 10
@@ -16,7 +16,7 @@ class Connection:
     def _connect(self):
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._sock.settimeout(TIMEOUT)
-        self._sock.connect((self._host, self._port))        
+        self._sock.connect((self._host, self._port))
 
     def noop(self):
         self._sock.send('noop\r\n'.encode())

@@ -1,7 +1,8 @@
-from pymogilefs import backend, client, exceptions
-
 # Set default logging handler to avoid "No handler found" warnings.
 import logging
+
+from pymogilefs import backend, client, exceptions
+
 try:  # Python 2.7+
     from logging import NullHandler
 except ImportError:

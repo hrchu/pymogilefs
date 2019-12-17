@@ -1,6 +1,8 @@
-from pymogilefs.connection import Connection
 import io
 import unittest
+
+from pymogilefs.connection import Connection
+
 try:
     from unittest import mock
 except ImportError:
