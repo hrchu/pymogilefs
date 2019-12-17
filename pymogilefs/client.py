@@ -30,6 +30,7 @@ class Client:
 
         :param key:
         :param timeout:
+        @param zone:
         :return:
         """
         paths = self.get_paths(key, zone=zone).data
@@ -48,6 +49,15 @@ class Client:
             raise Exception('No usable location to get file.')
 
     def store_file(self, file_handle, key, _class=None, timeout=None, zone='alt'):
+        """
+
+        @param file_handle:
+        @param key:
+        @param _class:
+        @param timeout:
+        @param zone:
+        @return:
+        """
         kwargs = {'domain': self._domain,
                   'key': key,
                   'fid': 0,
@@ -88,14 +98,31 @@ class Client:
         raise Exception('No usable location to put file.')
 
     def delete_file(self, key):
+        """
+
+        @param key:
+        @return:
+        """
         return self._do_request(backend.DeleteFileConfig,
                                 domain=self._domain,
                                 key=key)
 
     def rename_file(self):
+        """
+
+        @return:
+        """
         raise NotImplementedError
 
     def get_paths(self, key, noverify=True, zone='alt', pathcount=2):
+        """
+
+        @param key:
+        @param noverify:
+        @param zone:
+        @param pathcount:
+        @return:
+        """
         # TODO: timeout?
         return self._do_request(backend.GetPathsConfig,
                                 domain=self._domain,
@@ -105,6 +132,13 @@ class Client:
                                 pathcount=pathcount)
 
     def list_keys(self, prefix=None, after=None, limit=None):
+        """
+
+        @param prefix:
+        @param after:
+        @param limit:
+        @return:
+        """
         kwargs = {'domain': self._domain}
         if prefix is not None:
             kwargs['prefix'] = prefix
