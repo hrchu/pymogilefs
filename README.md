@@ -1,18 +1,31 @@
 pymogilefs
 ==========
 
-Python client for MogileFS, based on https://github.com/bwind/pymogilefs.
+Python client for MogileFS.
 
-There are a few Python client projects for MogileFS around, however, these projects seem to be outdated and
-abandoned. This implementation adds some production necessary features (tracker load balancing, test on borrow, fault tolerance, and so on), and have been used with large scale data-intensive applications (hundreds of nodes, several PBs, billions of files.)
 
+## Feature highlight
+
+This implementation has some unique production-ready features, and have been used with large scale data-intensive 
+applications (hundreds of nodes, several PBs, billions of files.) 
+
+These includes:
+* tracker load balancing
+* test on borrow
+* fault tolerance
+* connection keep alive
+
+
+## Install
 To install pymogilefs, simply:
 
     $ git clone git@github.com:hrchu/pymogilefs.git
     $ cd pymogilefs
     $ pip install .
 
-Usage:
+## Example
+
+Client usage:
 
     >>> from pymogilefs.client import Client
     >>> client = Client(trackers=['0.0.0.0:7001'], domain='testdomain')
@@ -29,7 +42,7 @@ Usage:
     >>> len(buf.read())
     4
 
-Backend usage:
+Admin usage:
 
     >>> from pymogilefs.backend import Backend
     >>> backend = Backend(trackers=['0.0.0.0:7001'])
@@ -47,4 +60,17 @@ Backend usage:
      'utilization': '',
      'weight': '100'}
 
+Ref more examples in `example/example.py`.
+
+## Multithreading / Multiprocessing
+Note that it is recommended to create a resource instance for each thread / process in a multithreaded or multiprocess 
+application rather than sharing a single instance among the threads / processes.
+
+
+## Acknowledges
+There are a few Python client projects for MogileFS around, however, these projects seem to be outdated and abandoned. 
+This work is based on [one](https://github.com/bwind/pymogilefs) of them. Many thanks!
+
+## Contributing
 Forks and pull requests are highly appreciated.
+
