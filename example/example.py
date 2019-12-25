@@ -26,7 +26,7 @@ file.close()
 file = open("/tmp/qqq", "rb")
 
 # init
-client = Client(trackers=['10.144.129.233:7001'], domain='dom1')
+client = Client(trackers=['127.0.0.1:7001'], domain='dom1')
 
 # upload file
 response = client.store_file(file, key, timeout=timeout)
