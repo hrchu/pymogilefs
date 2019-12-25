@@ -55,7 +55,7 @@ class Backend:
                 continue
             try:
                 candidate.noop()
-            except MogilefsError:
+            except MogilefsError as exc:
                 log.warning("Caught exception when execute noop command", exc_info=exc)
                 self._trackers[i][2] = time.time()
                 try:
