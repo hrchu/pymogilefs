@@ -12,11 +12,19 @@ class Connection:
     def __init__(self, host, port):
         self._host = host
         self._port = int(port)
+        self._sock = None
+
+    def __str__(self):
+        return ':'.join([self._host, self._port])
+
+    def is_connected(self):
+        return self._sock is not None
 
     def _connect(self):
-        self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._sock.settimeout(TIMEOUT)
-        self._sock.connect((self._host, self._port))
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(TIMEOUT)
+        sock.connect((self._host, self._port))
+        self._sock = sock
 
     def noop(self):
         self._sock.send('noop\r\n'.encode())
@@ -36,12 +44,13 @@ class Connection:
         return response_text.decode()
 
     def close(self):
-        self._sock.close()
+        try:
+            self._sock.close()
+        finally:
+            self._sock = None
 
     def do_request(self, request):
         assert isinstance(request, Request)
         self._sock.send(bytes(request))
         response_text = self._recv_all()
-        # TODO: do not close connection here.
-        self._sock.close()
         return Response(response_text, request.config)
