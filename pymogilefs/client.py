@@ -27,7 +27,7 @@ class Client:
     def _create_close(self, **kwargs):
         return self._do_request(backend.CreateCloseConfig, **kwargs)
 
-    def get_file(self, key, timeout=None, zone='alt') -> bytes:
+    def get_file(self, key, timeout=None, zone='default') -> bytes:
         """
         Given a key, returns a filehandle.
 
@@ -53,7 +53,7 @@ class Client:
             # raise  # UnknownFileError
             raise Exception('No usable location to get file.')
 
-    def store_file(self, file_handle, key, _class=None, timeout=None, zone='alt') -> Dict:
+    def store_file(self, file_handle, key, _class=None, timeout=None, zone='default') -> Dict:
         """
         Given a key, class, and a filehandle, stores the file contents in MogileFS.
 
@@ -122,7 +122,7 @@ class Client:
         """
         raise NotImplementedError
 
-    def get_paths(self, key, noverify=True, zone='alt', pathcount=2) -> Response:
+    def get_paths(self, key, noverify=True, zone='default', pathcount=2) -> Response:
         """
         Given a key, returns an array of all the locations (HTTP URLs) that the file has been replicated to.
 
