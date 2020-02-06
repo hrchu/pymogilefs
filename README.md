@@ -14,7 +14,7 @@ These includes:
 * test on borrow
 * fault tolerance
 * connection keep alive
-
+* the [zone](https://github.com/mogilefs/perl-MogileFS-Client/blob/master/lib/MogileFS/Client.pm#L537) option a.k.a.  alternative IP   
 
 ## Install
 To install pymogilefs, simply:
