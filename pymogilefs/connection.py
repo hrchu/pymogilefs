@@ -15,7 +15,7 @@ class Connection:
         self._sock = None
 
     def __str__(self):
-        return ':'.join([self._host, self._port])
+        return ':'.join([self._host, str(self._port)])
 
     def is_connected(self):
         return self._sock is not None

@@ -25,7 +25,7 @@ class Backend:
     def __init__(self, trackers):
         self._trackers = [[Connection(*tracker.split(':')), 0] for tracker in trackers]
 
-    def _get_not_failed_lately_connection_idx(self) -> Connection:
+    def _get_not_failed_lately_connection_idx(self) -> int:
         max_try = 1000
         for j in range(max_try):
             i = random.randrange(len(self._trackers))
