@@ -23,7 +23,7 @@ class ConnectionTest(unittest.TestCase):
 
     def test_no_socket_on_instantiation(self):
         connection = Connection('host', 1)
-        self.assertFalse(hasattr(connection, '_sock'))
+        self.assertEqual(None, connection._sock)
 
     def test_connect_settimeout(self):
         connection = Connection('host', 1)
