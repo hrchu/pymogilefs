@@ -3,6 +3,7 @@ import random
 import re
 import socket
 import time
+from typing import Dict
 
 from pymogilefs.connection import Connection
 from pymogilefs.exceptions import MogilefsError
@@ -51,7 +52,8 @@ class Backend:
                 try:
                     candidate._connect()
                 except socket.error as exc:
-                    log.warning("Caught socket.error while connecting the tracker: '%s'", candidate._host, canexc_info=exc)
+                    log.warning("Caught socket.error while connecting the tracker: '%s'", candidate._host,
+                                canexc_info=exc)
                     tracker_info[1] = time.time()
                     continue
 
@@ -141,15 +143,19 @@ class Backend:
                                weight=weight)
 
 
+def parse_response_text(response_text) -> Dict:
+    try:
+        return dict([pair.split('=') for pair in response_text.split('&')])
+    except ValueError:
+        raise Exception('Cannot parse response: %s', response_text)
+
+
 class RequestConfig:
     @classmethod
     def parse_response_text(cls, response_text):
-        if not response_text:
+        if not response_text or response_text == '':
             return {}
-        try:
-            return dict([pair.split('=') for pair in response_text.split('&')])
-        except ValueError:
-            raise Exception('Cannot parse response: %s', response_text)
+        return parse_response_text(response_text)
 
 
 class GetHostsConfig(RequestConfig):
@@ -157,7 +163,7 @@ class GetHostsConfig(RequestConfig):
 
     @classmethod
     def parse_response_text(cls, response_text):
-        pairs = dict([pair.split('=') for pair in response_text.split('&')])
+        pairs = parse_response_text(response_text)
         if 'hosts' in pairs:
             del pairs['hosts']
         hosts = {}
@@ -175,7 +181,7 @@ class CreateHostConfig(RequestConfig):
 
     @classmethod
     def parse_response_text(cls, response_text):
-        pairs = dict([pair.split('=') for pair in response_text.split('&')])
+        pairs = parse_response_text(response_text)
         return {key.split('host', 1)[1]: value for key, value in pairs.items()}
 
 
@@ -184,7 +190,7 @@ class UpdateHostConfig(RequestConfig):
 
     @classmethod
     def parse_response_text(cls, response_text):
-        pairs = dict([pair.split('=') for pair in response_text.split('&')])
+        pairs = parse_response_text(response_text)
         return {key.split('host', 1)[1]: value for key, value in pairs.items()}
 
 
@@ -197,7 +203,7 @@ class GetDomainsConfig(RequestConfig):
 
     @classmethod
     def parse_response_text(cls, response_text):
-        pairs = dict([pair.split('=') for pair in response_text.split('&')])
+        pairs = parse_response_text(response_text)
         if 'domains' in pairs:
             del pairs['domains']
         domains = {}
@@ -240,7 +246,7 @@ class GetDevicesConfig(RequestConfig):
 
     @classmethod
     def parse_response_text(cls, response_text):
-        pairs = dict([pair.split('=') for pair in response_text.split('&')])
+        pairs = parse_response_text(response_text)
         if 'devices' in pairs:
             del pairs['devices']
         devices = {}
@@ -269,7 +275,7 @@ class CreateOpenConfig(RequestConfig):
 
     @classmethod
     def parse_response_text(cls, response_text):
-        pairs = dict([pair.split('=') for pair in response_text.split('&')])
+        pairs = parse_response_text(response_text)
         data = {
             'fid': pairs['fid'],
             'dev_count': int(pairs['dev_count']),
@@ -303,9 +309,9 @@ class ListKeysConfig(RequestConfig):
 
     @classmethod
     def parse_response_text(cls, response_text):
-        if response_text == '':
+        if not response_text or response_text == '':
             return {}
-        pairs = dict([pair.split('=') for pair in response_text.split('&')])
+        pairs = parse_response_text(response_text)
         key_count = pairs.pop('key_count')
         next_after = pairs.pop('next_after')
         data = {
@@ -322,7 +328,7 @@ class GetPathsConfig(RequestConfig):
 
     @classmethod
     def parse_response_text(cls, response_text):
-        pairs = dict([pair.split('=') for pair in response_text.split('&')])
+        pairs = parse_response_text(response_text)
         data = {
             'path_count': int(pairs['paths']),
             'paths': {int(key.replace('path', '')): path for key, path in
