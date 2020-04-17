@@ -51,14 +51,14 @@ class Backend:
                 try:
                     candidate._connect()
                 except socket.error as exc:
-                    log.warning("Caught exception socket.error", exc_info=exc)
+                    log.warning("Caught socket.error while connecting the tracker: '%s'", candidate._host, canexc_info=exc)
                     tracker_info[1] = time.time()
                     continue
 
             try:
                 candidate.noop()
             except MogilefsError as exc:
-                log.warning("Caught exception when execute noop command", exc_info=exc)
+                log.warning("Caught MogilefsError while nooping the tracker: '%s'", candidate._host, exc_info=exc)
                 tracker_info[1] = time.time()
                 try:
                     candidate.close()
@@ -72,7 +72,7 @@ class Backend:
         if connection:
             return connection
         else:
-            raise Exception('No connection usable.')
+            raise Exception('No tracker usable.')
 
     def do_request(self, config, **kwargs):
         return self._get_connection().do_request(Request(config, **kwargs))
@@ -146,7 +146,10 @@ class RequestConfig:
     def parse_response_text(cls, response_text):
         if not response_text:
             return {}
-        return dict([pair.split('=') for pair in response_text.split('&')])
+        try:
+            return dict([pair.split('=') for pair in response_text.split('&')])
+        except ValueError:
+            raise Exception('Cannot parse response: %s', response_text)
 
 
 class GetHostsConfig(RequestConfig):
