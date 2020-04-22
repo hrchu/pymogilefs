@@ -53,7 +53,7 @@ class Backend:
                     candidate._connect()
                 except socket.error as exc:
                     log.warning("Caught socket.error while connecting the tracker: '%s'", candidate._host,
-                                canexc_info=exc)
+                                exc_info=exc)
                     tracker_info[1] = time.time()
                     continue
 
