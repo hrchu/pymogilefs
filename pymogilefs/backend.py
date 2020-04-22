@@ -146,8 +146,8 @@ class Backend:
 def parse_response_text(response_text) -> Dict:
     try:
         return dict([pair.split('=') for pair in response_text.split('&')])
-    except ValueError:
-        raise Exception('Cannot parse response: %s', response_text)
+    except ValueError as e:
+        raise Exception('Cannot parse response: %s' % response_text) from e
 
 
 class RequestConfig:
