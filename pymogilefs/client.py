@@ -132,7 +132,6 @@ class Client:
         @param pathcount: If the pathcount option is set to a positive integer greater than 2, the mogilefsd tracker will attempt to return that many different paths (if available) to the same file. If not present or out of range, this value defaults to 2.
         @return: Response within paths and path_count
         """
-        # TODO: timeout?
         return self._do_request(backend.GetPathsConfig,
                                 domain=self._domain,
                                 key=key,

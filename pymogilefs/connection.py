@@ -5,7 +5,7 @@ from pymogilefs.request import Request
 from pymogilefs.response import Response
 
 BUFSIZE = 4096
-TIMEOUT = 10
+TIMEOUT = 15
 
 
 class Connection:
@@ -36,8 +36,6 @@ class Connection:
         response_text = b''
         while True:
             received = self._sock.recv(BUFSIZE)
-            if received == b'':
-                break
             response_text += received
             if response_text[-2:] == b'\r\n':
                 break

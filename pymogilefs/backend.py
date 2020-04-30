@@ -22,6 +22,13 @@ FORGIVENESS_TIME = 5 * 60
 log = logging.getLogger(__name__)
 
 
+def _close_connection_quietly(conn: Connection):
+    try:
+        conn.close()
+    except Exception:
+        pass
+
+
 class Backend:
     def __init__(self, trackers):
         self._trackers = [[Connection(*tracker.split(':')), 0] for tracker in trackers]
@@ -59,13 +66,10 @@ class Backend:
 
             try:
                 candidate.noop()
-            except MogilefsError as exc:
-                log.warning("Caught MogilefsError while nooping the tracker: '%s'", candidate._host, exc_info=exc)
+            except (socket.timeout or MogilefsError) as exc:
+                log.warning("Caught exception while nooping tracker: '%s'", candidate._host, exc_info=exc)
                 tracker_info[1] = time.time()
-                try:
-                    candidate.close()
-                except Exception:
-                    pass
+                _close_connection_quietly(candidate)
                 continue
 
             connection = candidate
@@ -77,7 +81,12 @@ class Backend:
             raise Exception('No tracker usable.')
 
     def do_request(self, config, **kwargs):
-        return self._get_connection().do_request(Request(config, **kwargs))
+        conn = self._get_connection()
+        try:
+            return conn.do_request(Request(config, **kwargs))
+        except socket.timeout as exc:
+            _close_connection_quietly(conn)
+            raise exc
 
     def get_hosts(self):
         return self.do_request(GetHostsConfig)

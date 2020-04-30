@@ -66,6 +66,9 @@ Ref more examples in `example/example.py`.
 Note that it is recommended to create a resource instance for each thread / process in a multithreaded or multiprocess 
 application rather than sharing a single instance among the threads / processes.
 
+## Known issues
+* The timeout option only effect store node connections. Tracker timeout is hard coded.  
+
 
 ## Acknowledges
 There are a few Python client projects for MogileFS around, however, these projects seem to be outdated and abandoned. 
