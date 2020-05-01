@@ -30,7 +30,7 @@ class Connection:
         self._sock.send('noop\r\n'.encode())
         response_text = self._recv_all()
         if 'OK' not in response_text:
-            raise MogilefsError('NOT OK', 'noop failed')
+            raise MogilefsError('NOT OK', 'noop failed')  # TODO: use proper expcetion type here
 
     def _recv_all(self):
         response_text = b''

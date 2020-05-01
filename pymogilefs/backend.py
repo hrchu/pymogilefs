@@ -25,7 +25,7 @@ log = logging.getLogger(__name__)
 def _close_connection_quietly(conn: Connection):
     try:
         conn.close()
-    except Exception:
+    except:
         pass
 
 
@@ -58,15 +58,15 @@ class Backend:
             if not candidate.is_connected():
                 try:
                     candidate._connect()
-                except socket.error as exc:
-                    log.warning("Caught socket.error while connecting the tracker: '%s'", candidate._host,
+                except OSError as exc:
+                    log.warning("Caught exception while connecting tracker: '%s'", candidate._host,
                                 exc_info=exc)
                     tracker_info[1] = time.time()
                     continue
 
             try:
                 candidate.noop()
-            except (socket.timeout or MogilefsError) as exc:
+            except (OSError or MogilefsError) as exc:
                 log.warning("Caught exception while nooping tracker: '%s'", candidate._host, exc_info=exc)
                 tracker_info[1] = time.time()
                 _close_connection_quietly(candidate)
@@ -84,7 +84,7 @@ class Backend:
         conn = self._get_connection()
         try:
             return conn.do_request(Request(config, **kwargs))
-        except socket.timeout as exc:
+        except OSError as exc:
             _close_connection_quietly(conn)
             raise exc
 
