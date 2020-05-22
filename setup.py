@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pymogilefs',
-    version='0.1.1-7',
+    version='0.1.1-8',
     description='Python MogileFS Client',
     long_description='Python MogileFS Client',
     url='https://github.com/bwind/pymogilefs',
